@@ -1,14 +1,15 @@
 package com.crio.qcontest.services;
 
- import java.util.Collections;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.crio.qcontest.constants.UserOrder;
 import com.crio.qcontest.entities.User;
 import com.crio.qcontest.repositories.IUserRepository;
 
-public class UserService{
+public class UserService {
 
     private final IUserRepository userRepository;
 
@@ -22,7 +23,8 @@ public class UserService{
     // 1) Create and store user in the repository.
 
     public User createUser(String name) {
-     return null;
+        User user = new User(name);
+        return userRepository.save(user);
     }
 
     // TODO: CRIO_TASK_MODULE_SERVICES
@@ -32,6 +34,11 @@ public class UserService{
     // 2) Get all the users in descending Order w.r.t score.
 
     public List<User> getUsers(UserOrder userOrder) {
-     return Collections.emptyList();
-    } 
+        List<User> users = userRepository.findAll();
+        if (userOrder == UserOrder.SCORE_ASC)
+            return users.stream().sorted((a, b) -> a.getTotalScore() - b.getTotalScore())
+                    .collect(Collectors.toList());
+        return users.stream().sorted((a, b) -> b.getTotalScore() - a.getTotalScore())
+                .collect(Collectors.toList());
+    }
 }

@@ -1,6 +1,6 @@
 package com.crio.qcontest.repositories;
 
- import java.util.Collections;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 
 import com.crio.qcontest.entities.User;
 
-public class UserRepository implements IUserRepository{
-    private final Map<Long,User> userMap;
+public class UserRepository implements IUserRepository {
+    private final Map<Long, User> userMap;
     private Long autoIncrement = 1L;
 
-    public UserRepository(){
-        userMap = new HashMap<Long,User>();
+    public UserRepository() {
+        userMap = new HashMap<Long, User>();
     }
 
     // TODO: CRIO_TASK_MODULE_SERVICES
@@ -25,7 +25,10 @@ public class UserRepository implements IUserRepository{
 
     @Override
     public User save(User user) {
-     return null;
+        User u = new User(user.getName(), autoIncrement);
+        userMap.put(autoIncrement, u);
+        autoIncrement++;
+        return u;
     }
 
     // TODO: CRIO_TASK_MODULE_SERVICES
@@ -35,7 +38,7 @@ public class UserRepository implements IUserRepository{
 
     @Override
     public List<User> findAll() {
-     return Collections.emptyList();
+        return userMap.values().stream().collect(Collectors.toList());
     }
 
     @Override
@@ -45,7 +48,7 @@ public class UserRepository implements IUserRepository{
 
     @Override
     public Optional<User> findByName(String name) {
-    // Find an user which matches with the required name.
+        // Find an user which matches with the required name.
         return userMap.values().stream().filter(u -> u.getName().equals(name)).findFirst();
-    }  
+    }
 }
